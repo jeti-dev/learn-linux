@@ -1,0 +1,128 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  background: var(--term-bg);
+  color: var(--term-fg);
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.title {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 12px;
+  background: #d8dee6;
+  color: #0d1117;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+.modified {
+  margin-left: auto;
+}
+
+.area {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.45;
+  white-space: pre;
+  overflow: auto;
+  caret-color: var(--term-green);
+}
+.area[readonly] {
+  caret-color: transparent;
+  cursor: default;
+}
+
+.status {
+  min-height: 28px;
+  padding: 4px 12px;
+  color: var(--term-yellow);
+  border-top: 1px solid var(--term-border);
+}
+.cmdline {
+  display: flex;
+  gap: 2px;
+  color: var(--term-fg);
+}
+.cmdline input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--term-border);
+  background: #11161d;
+}
+.barKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--term-border);
+  border-radius: 6px;
+  background: #1b222b;
+  color: var(--term-fg);
+  font: inherit;
+  cursor: pointer;
+}
+.barKey:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.barKey kbd {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #d8dee6;
+  color: #0d1117;
+  font: inherit;
+  font-weight: 700;
+}
+.question {
+  color: var(--term-yellow);
+}
+.hint {
+  color: var(--term-muted);
+  font-size: 12px;
+}
+
+@media (pointer: coarse) {
+  .area,
+  .cmdline input {
+    font-size: 16px;
+  }
+}
+
+.area:focus-visible,
+.cmdline input:focus-visible {
+  outline: none;
+}

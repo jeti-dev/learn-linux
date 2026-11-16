@@ -1,0 +1,11 @@
+{
+  "name": "Learn Linux",
+  "short_name": "Learn Linux",
+  "description": "Interactive Linux terminal lessons for developers.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

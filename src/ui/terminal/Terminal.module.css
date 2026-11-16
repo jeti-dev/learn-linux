@@ -1,0 +1,181 @@
+.terminal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--term-bg);
+  color: var(--term-fg);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 12px 14px;
+  cursor: text;
+  overscroll-behavior: contain;
+  scrollbar-color: #39424d transparent;
+}
+
+.line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 8;
+}
+.err {
+  color: #ffb3ad;
+}
+.note {
+  color: var(--term-green);
+}
+.cmd {
+  color: #f0f4f8;
+}
+
+.prompt {
+  color: var(--term-fg);
+}
+.promptUser {
+  color: var(--term-green);
+  font-weight: 700;
+}
+.promptPath {
+  color: var(--term-blue);
+  font-weight: 700;
+}
+.promptPlain {
+  color: var(--term-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.searchMatch {
+  color: var(--term-fg);
+}
+
+.inputRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.inputRow > span {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* A trailing space would collapse at the end of a flex item; use a margin instead. */
+  margin-right: 1ch;
+}
+.input {
+  flex: 1 1 8ch;
+  min-width: 8ch;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f0f4f8;
+  font: inherit;
+  caret-color: var(--term-green);
+}
+.input:focus-visible {
+  outline: none;
+}
+.inputHidden {
+  flex: 0 0 1px;
+  min-width: 1px;
+  width: 1px;
+  opacity: 0;
+}
+
+.runningHint {
+  margin-top: 6px;
+  color: var(--term-muted);
+  font-style: italic;
+}
+
+/* ---- key bar: shown on touch devices and narrow screens ---- */
+.keybar {
+  display: none;
+  gap: 6px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  overflow-x: auto;
+  border-top: 1px solid var(--term-border);
+  background: #11161d;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.keybar::-webkit-scrollbar {
+  display: none;
+}
+.key {
+  flex: 0 0 auto;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--term-border);
+  border-radius: 6px;
+  background: #1b222b;
+  color: var(--term-fg);
+  font-family: var(--mono);
+  font-size: 15px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.key:active {
+  background: #2a3440;
+}
+.keyWide {
+  font-size: 13px;
+  color: #b9c3ce;
+}
+.keyActive {
+  background: var(--term-green);
+  border-color: var(--term-green);
+  color: #06210f;
+  font-weight: 700;
+}
+
+@media (pointer: coarse), (max-width: 760px) {
+  .keybar {
+    display: flex;
+  }
+}
+
+@media (pointer: coarse) {
+  .terminal {
+    font-size: 13px;
+  }
+  /* 16px stops iOS from zooming the page when the field gets focus. */
+  .input {
+    font-size: 16px;
+  }
+}
+
+:global(.ansi-bold) {
+  font-weight: 700;
+}
+:global(.ansi-red) {
+  color: var(--term-red);
+}
+:global(.ansi-green) {
+  color: var(--term-green);
+}
+:global(.ansi-yellow) {
+  color: var(--term-yellow);
+}
+:global(.ansi-blue) {
+  color: var(--term-blue);
+}
+:global(.ansi-magenta) {
+  color: var(--term-magenta);
+}
+:global(.ansi-cyan) {
+  color: var(--term-cyan);
+}
+:global(.ansi-dim) {
+  color: var(--term-muted);
+}
