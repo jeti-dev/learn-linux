@@ -15,6 +15,8 @@ To try it on a phone on the same network: `npm run dev -- --host`, then open the
 
 `dist/` is a static site and can be hosted anywhere. Routes use the URL hash, so no server rewrites are needed.
 
+Every push to `master` runs the tests, builds the site and deploys it to GitHub Pages (`.github/workflows/deploy.yml`).
+
 ## Tests
 
 ```
