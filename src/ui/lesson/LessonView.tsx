@@ -23,21 +23,18 @@ export function LessonPage() {
     );
   }
   // Remount when the lesson changes so every lesson starts with a fresh machine.
-  return <LessonView key={found.lesson.id} lesson={found.lesson} module={found.module} next={found.next} />;
+  return <LessonView key={found.lesson.id} lesson={found.lesson} module={found.module} prev={found.prev} next={found.next} />;
 }
 
 const solutionText = (item: SolutionStep) => (typeof item === 'string' ? item : item.label);
 
-function LessonView({ lesson, module, next }: { lesson: Lesson; module: Module; next?: Lesson }) {
+function LessonView({ lesson, module, prev, next }: { lesson: Lesson; module: Module; prev?: Lesson; next?: Lesson }) {
   const navigate = useNavigate();
   const viewport = useVisualViewport();
   const terminal = useRef<TerminalHandle>(null);
-  const [attempt, setAttempt] = useState(0);
-  const runner = useMemo(() => {
-    const saved = attempt === 0 ? (progress.get().step[lesson.id] ?? 0) : 0;
-    return new LessonRunner(lesson, saved);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lesson, attempt]);
+  // Each new attempt builds a fresh machine and replays reference solutions up to `step`.
+  const [start, setStart] = useState(() => ({ attempt: 0, step: progress.get().step[lesson.id] ?? 0 }));
+  const runner = useMemo(() => new LessonRunner(lesson, start.step), [lesson, start]);
   const [stepIndex, setStepIndex] = useState(runner.stepIndex);
   const [hints, setHints] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
@@ -69,12 +66,14 @@ function LessonView({ lesson, module, next }: { lesson: Lesson; module: Module; 
   const cramped = viewport < 520;
   const compact = !finished && (collapsed || cramped);
   const insert = (code: string) => terminal.current?.insert(code);
-  const restart = () => {
-    progress.setStep(lesson.id, 0);
+  const goToStep = (target: number) => {
+    progress.setStep(lesson.id, target);
     setHints(0);
     setShowSolution(false);
-    setAttempt((n) => n + 1);
+    setStart((prev) => ({ attempt: prev.attempt + 1, step: target }));
   };
+  const restart = () => goToStep(0);
+  const stepBack = () => goToStep(Math.max(0, Math.min(stepIndex, total) - 1));
 
   return (
     <div className={s.page}>
@@ -86,6 +85,11 @@ function LessonView({ lesson, module, next }: { lesson: Lesson; module: Module; 
           <span className={s.module}>{module.title}</span>
           <h1 className={s.title}>{lesson.title}</h1>
         </div>
+        {prev && (
+          <button type="button" className="btn btn-quiet" onClick={() => navigate(`/lesson/${prev.id}`)} title={`Previous lesson: ${prev.title}`} aria-label={`Previous lesson: ${prev.title}`}>
+            ‹ Prev
+          </button>
+        )}
         <button type="button" className="btn btn-quiet" onClick={restart} title="Start this lesson again with a fresh machine">
           Restart
         </button>
@@ -111,16 +115,31 @@ function LessonView({ lesson, module, next }: { lesson: Lesson; module: Module; 
                     All lessons
                   </Link>
                 )}
+                <button type="button" className="btn" onClick={stepBack}>
+                  Redo last step
+                </button>
                 <button type="button" className="btn" onClick={restart}>
                   Do it again
                 </button>
+                {prev && (
+                  <button type="button" className="btn" onClick={() => navigate(`/lesson/${prev.id}`)}>
+                    Back: {prev.title}
+                  </button>
+                )}
               </div>
             </div>
           ) : (
             <>
               <div className={s.stepHead}>
-                <span className={s.stepCount}>
-                  Step {stepIndex + 1} of {total}
+                <span className={s.stepNav}>
+                  {stepIndex > 0 && (
+                    <button type="button" className={s.stepBack} onClick={stepBack} title="Go back to the previous step" aria-label="Previous step">
+                      ‹
+                    </button>
+                  )}
+                  <span className={s.stepCount}>
+                    Step {stepIndex + 1} of {total}
+                  </span>
                 </span>
                 {!cramped && (
                   <button type="button" className={s.toggle} onClick={() => setCollapsed((v) => !v)} aria-expanded={!collapsed}>
@@ -183,7 +202,7 @@ function LessonView({ lesson, module, next }: { lesson: Lesson; module: Module; 
         </section>
 
         <section className={s.term} aria-label="Terminal">
-          <Terminal key={attempt} ref={terminal} host={runner} autoFocus />
+          <Terminal key={start.attempt} ref={terminal} host={runner} autoFocus />
         </section>
       </div>
     </div>

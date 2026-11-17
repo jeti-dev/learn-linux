@@ -19,9 +19,9 @@ export const MODULES: Module[] = [gettingAround, files, pipes, searching, textPr
 
 export const LESSONS: Lesson[] = MODULES.flatMap((m) => m.lessons);
 
-export function findLesson(id: string): { lesson: Lesson; module: Module; next?: Lesson } | undefined {
+export function findLesson(id: string): { lesson: Lesson; module: Module; prev?: Lesson; next?: Lesson } | undefined {
   const index = LESSONS.findIndex((l) => l.id === id);
   if (index < 0) return undefined;
   const lesson = LESSONS[index];
-  return { lesson, module: MODULES.find((m) => m.lessons.includes(lesson))!, next: LESSONS[index + 1] };
+  return { lesson, module: MODULES.find((m) => m.lessons.includes(lesson))!, prev: LESSONS[index - 1], next: LESSONS[index + 1] };
 }
